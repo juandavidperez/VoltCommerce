@@ -14,17 +14,14 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-16">
             <!-- Logo -->
-            <a routerLink="/" class="flex items-center gap-2 group">
-              <img src="assets/logo-icon.svg" alt="" class="h-8 w-auto transition-transform duration-200 group-hover:scale-110">
-              <span class="text-xl font-heading font-bold text-ink-primary hidden sm:block">
-                <span class="text-primary">Volt</span>Commerce
-              </span>
+            <a routerLink="/" class="group">
+              <img src="assets/logo-full.svg" alt="VoltCommerce" class="h-10 w-auto transition-transform duration-200 group-hover:scale-105">
             </a>
 
             <!-- Nav -->
             <nav class="hidden md:flex items-center gap-8">
               <a routerLink="/products" routerLinkActive="text-primary font-medium"
-                 class="text-sm text-ink-secondary hover:text-primary transition-colors duration-150 font-body">
+                 class="text-base text-ink-secondary hover:text-primary transition-colors duration-150 font-body font-medium">
                 Products
               </a>
             </nav>
@@ -76,7 +73,7 @@ import { AuthService } from '../../core/services/auth.service';
               <img src="assets/logo-icon.svg" alt="" class="h-5 w-auto opacity-50">
               <span class="text-sm text-ink-disabled font-body">VoltCommerce</span>
             </div>
-            <p class="text-xs text-ink-disabled font-body">&copy; 2024 VoltCommerce. All rights reserved.</p>
+            <p class="text-xs text-ink-disabled font-body">&copy; 2026 VoltCommerce. All rights reserved.</p>
           </div>
         </div>
       </footer>
