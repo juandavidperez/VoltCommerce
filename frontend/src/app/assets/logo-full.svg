@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" width="820" height="220">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&amp;display=swap');
+      .wm { font-family: 'Exo 2', 'DM Sans', sans-serif; font-weight: 700; font-size: 100px; fill: #00E5FF; letter-spacing: -1px; }
+    </style>
+  </defs>
+  <!-- V left leg -->
+  <polygon points="44,48 66,48 110,162 88,162" fill="#00E5FF"/>
+  <!-- V right leg = lightning bolt (gold) -->
+  <polygon points="128,48 152,48 138,95 158,95 110,162 120,108 100,108" fill="#FFEA00"/>
+  <!-- oltCommerce text — kerned closer to V -->
+  <text class="wm" x="148" y="158">oltCommerce</text>
+</svg>
