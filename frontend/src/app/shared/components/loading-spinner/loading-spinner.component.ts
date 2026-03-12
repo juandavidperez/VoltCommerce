@@ -5,7 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <div class="flex items-center justify-center p-8">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+      <div class="relative">
+        <div class="h-10 w-10 rounded-full border-2 border-primary-light"></div>
+        <div class="absolute top-0 left-0 h-10 w-10 rounded-full border-2 border-transparent border-t-primary animate-spin"></div>
+      </div>
     </div>
   `
 })

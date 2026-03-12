@@ -8,40 +8,70 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Welcome back</h2>
-        <p class="text-center text-gray-500 mb-8">Sign in to your account</p>
+    <div class="min-h-screen flex bg-surface-app">
+      <!-- Left Panel — Branding -->
+      <div class="hidden lg:flex lg:w-1/2 bg-ink-primary items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03]"
+             style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, #00E5FF 35px, #00E5FF 36px);">
+        </div>
+        <div class="relative z-10 text-center px-12 animate-fade-in-up">
+          <img src="assets/logo-icon.svg" alt="" class="h-20 w-auto mx-auto mb-8 drop-shadow-lg">
+          <h1 class="font-heading text-4xl font-bold text-white mb-3">
+            <span class="text-primary">Volt</span>Commerce
+          </h1>
+          <p class="text-lg text-white/50 font-body max-w-sm mx-auto">
+            Premium electronics marketplace. Fast shipping, trusted brands.
+          </p>
+        </div>
+      </div>
 
-        @if (errorMessage) {
-          <div class="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm">{{ errorMessage }}</div>
-        }
-
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input id="email" type="email" formControlName="email"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-              placeholder="you@example.com">
+      <!-- Right Panel — Form -->
+      <div class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md animate-fade-in-up">
+          <!-- Mobile Logo -->
+          <div class="lg:hidden flex items-center justify-center gap-2 mb-10">
+            <img src="assets/logo-icon.svg" alt="" class="h-10 w-auto">
+            <span class="font-heading font-bold text-2xl text-ink-primary">
+              <span class="text-primary">Volt</span>Commerce
+            </span>
           </div>
 
-          <div class="mb-6">
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input id="password" type="password" formControlName="password"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-              placeholder="••••••••">
-          </div>
+          <h2 class="font-heading text-2xl font-bold text-ink-primary mb-1">Welcome back</h2>
+          <p class="text-sm text-ink-secondary font-body mb-8">Sign in to your account to continue</p>
 
-          <button type="submit" [disabled]="form.invalid || loading"
-            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium">
-            {{ loading ? 'Signing in...' : 'Sign In' }}
-          </button>
-        </form>
+          @if (errorMessage) {
+            <div class="flex items-center gap-2 bg-danger-bg text-danger px-4 py-3 rounded-md mb-6 text-sm font-body">
+              <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ errorMessage }}
+            </div>
+          }
 
-        <p class="text-center text-sm text-gray-500 mt-6">
-          Don't have an account?
-          <a routerLink="/auth/register" class="text-indigo-600 hover:text-indigo-500 font-medium">Register</a>
-        </p>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-5">
+              <label for="email" class="form-label">Email Address</label>
+              <input id="email" type="email" formControlName="email"
+                class="form-input" placeholder="you&#64;example.com">
+            </div>
+
+            <div class="mb-6">
+              <label for="password" class="form-label">Password</label>
+              <input id="password" type="password" formControlName="password"
+                class="form-input" placeholder="Enter your password">
+            </div>
+
+            <button type="submit" [disabled]="form.invalid || loading"
+              class="btn-primary w-full text-sm">
+              {{ loading ? 'Signing in...' : 'Sign In' }}
+            </button>
+          </form>
+
+          <p class="text-center text-sm text-ink-secondary mt-8 font-body">
+            Don't have an account?
+            <a routerLink="/auth/register" class="text-primary hover:text-primary-hover font-medium transition-colors">Create one</a>
+          </p>
+        </div>
       </div>
     </div>
   `

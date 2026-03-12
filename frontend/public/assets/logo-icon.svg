@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 160" width="130" height="160">
+  <!-- Left leg — cyan -->
+  <polygon points="18,0 38,0 80,150 60,150" fill="#00E5FF"/>
+  <!-- Right leg = lightning bolt — gold -->
+  <polygon points="86,0 108,0 96,62 116,62 80,150 88,78 68,78" fill="#FFEA00"/>
+</svg>
