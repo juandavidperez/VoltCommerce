@@ -13,6 +13,7 @@ module.exports = {
           DEFAULT: '#00E5FF',
           hover: '#00B8D4',
           light: '#E0F7FA',
+          text: '#006064',
         },
         accent: {
           DEFAULT: '#FFEA00',
@@ -24,14 +25,15 @@ module.exports = {
         },
         ink: {
           primary: '#263238',
-          secondary: '#757575',
+          secondary: '#545454',
           disabled: '#BDBDBD',
+          muted: '#767676',
         },
         border: '#E0E0E0',
-        success: { DEFAULT: '#4CAF50', bg: '#E8F5E9' },
-        warning: { DEFAULT: '#FF9800', bg: '#FFF3E0' },
-        danger: { DEFAULT: '#F44336', bg: '#FFEBEE' },
-        info: { DEFAULT: '#2196F3', bg: '#E3F2FD' },
+        success: { DEFAULT: '#1B5E20', bg: '#E8F5E9' },
+        warning: { DEFAULT: '#7A4500', bg: '#FFF3E0' },
+        danger: { DEFAULT: '#AB1A1A', bg: '#FFEBEE' },
+        info: { DEFAULT: '#0D47A1', bg: '#E3F2FD' },
       },
       borderRadius: {
         sm: '6px',
