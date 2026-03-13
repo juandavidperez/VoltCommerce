@@ -20,8 +20,8 @@ import { AuthService } from '../../core/services/auth.service';
 
             <!-- Nav -->
             <nav class="hidden md:flex items-center gap-8">
-              <a routerLink="/products" routerLinkActive="text-primary font-medium"
-                 class="text-base text-ink-secondary hover:text-primary transition-colors duration-150 font-body font-medium">
+              <a routerLink="/products" routerLinkActive="!text-primary-text"
+                 class="text-base text-ink-secondary hover:text-primary-text transition-colors duration-150 font-body font-medium">
                 Products
               </a>
             </nav>
@@ -30,7 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
             <div class="flex items-center gap-3">
               <!-- Cart -->
               <a routerLink="/cart"
-                 class="relative p-2 rounded-md text-ink-secondary hover:text-primary hover:bg-primary-light transition-all duration-150">
+                 class="relative p-2 rounded-md text-ink-secondary hover:text-primary-text hover:bg-primary-light transition-all duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                 </svg>
@@ -40,10 +40,10 @@ import { AuthService } from '../../core/services/auth.service';
               @if (currentUser$ | async; as user) {
                 <div class="flex items-center gap-3">
                   <a routerLink="/orders"
-                     class="text-sm text-ink-secondary hover:text-primary transition-colors font-body">My Orders</a>
+                     class="text-sm text-ink-secondary hover:text-primary-text transition-colors font-body">My Orders</a>
                   @if (user.role === 'ADMIN') {
                     <a routerLink="/admin"
-                       class="text-sm font-medium text-primary hover:text-primary-hover transition-colors font-body">Admin</a>
+                       class="text-sm font-medium text-primary-text hover:text-ink-primary transition-colors font-body">Admin</a>
                   }
                   <div class="h-5 w-px bg-border"></div>
                   <button (click)="logout()"
@@ -51,7 +51,7 @@ import { AuthService } from '../../core/services/auth.service';
                 </div>
               } @else {
                 <a routerLink="/auth/login"
-                   class="text-sm text-ink-secondary hover:text-primary transition-colors font-body">Sign in</a>
+                   class="text-sm text-ink-secondary hover:text-primary-text transition-colors font-body">Sign in</a>
                 <a routerLink="/auth/register"
                    class="btn-primary text-sm !py-2 !px-4">Get Started</a>
               }
@@ -71,9 +71,9 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-2">
               <img src="assets/logo-icon.svg" alt="" class="h-5 w-auto opacity-50">
-              <span class="text-sm text-ink-disabled font-body">VoltCommerce</span>
+              <span class="text-sm text-ink-secondary font-body">VoltCommerce</span>
             </div>
-            <p class="text-xs text-ink-disabled font-body">&copy; 2026 VoltCommerce. All rights reserved.</p>
+            <p class="text-xs text-ink-secondary font-body">&copy; 2026 VoltCommerce. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -19,9 +19,9 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="flex items-center gap-2.5 px-5 h-16 border-b border-border">
           <img src="assets/logo-icon.svg" alt="" class="h-7 w-auto">
           <span class="font-heading font-bold text-lg text-ink-primary">
-            <span class="text-primary">Volt</span>Admin
+            <span class="text-primary-text">Volt</span>Admin
           </span>
-          <button (click)="sidebarOpen.set(false)" class="lg:hidden ml-auto text-ink-disabled hover:text-ink-primary transition-colors">
+          <button (click)="sidebarOpen.set(false)" class="lg:hidden ml-auto text-ink-secondary hover:text-ink-primary transition-colors">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -54,7 +54,7 @@ import { AuthService } from '../../core/services/auth.service';
 
         <!-- Footer -->
         <div class="border-t border-border p-3">
-          <a routerLink="/" class="nav-item text-ink-disabled hover:text-ink-primary">
+          <a routerLink="/" class="nav-item text-ink-secondary hover:text-ink-primary">
             <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" /></svg>
             Back to Store
           </a>
@@ -75,11 +75,11 @@ import { AuthService } from '../../core/services/auth.service';
             @if (currentUser$ | async; as user) {
               <span class="text-sm text-ink-secondary font-body">{{ user.name }}</span>
               <div class="h-8 w-8 rounded-full bg-primary-light flex items-center justify-center">
-                <span class="text-xs font-medium text-primary-hover font-body">{{ user.name.charAt(0) }}</span>
+                <span class="text-xs font-medium text-primary-text font-body">{{ user.name.charAt(0) }}</span>
               </div>
             }
             <button (click)="logout()"
-              class="text-sm text-ink-disabled hover:text-danger transition-colors font-body">Logout</button>
+              class="text-sm text-ink-secondary hover:text-danger transition-colors font-body">Logout</button>
           </div>
         </header>
 
@@ -113,7 +113,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     .nav-item.nav-active {
       background-color: var(--color-primary-light);
-      color: var(--color-primary-hover);
+      color: var(--color-primary-text);
       font-weight: 500;
       border-left-color: var(--color-accent);
       padding-left: 9px;

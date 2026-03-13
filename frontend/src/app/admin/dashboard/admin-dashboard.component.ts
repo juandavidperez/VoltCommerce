@@ -35,7 +35,7 @@ import { Component } from '@angular/core';
           <div class="h-64 flex items-center justify-center border border-dashed border-border rounded-md">
             <div class="text-center">
               <img src="assets/logo-icon.svg" alt="" class="h-8 w-auto mx-auto mb-3 opacity-20">
-              <p class="text-sm text-ink-disabled font-body">Line chart coming in Week 4</p>
+              <p class="text-sm text-ink-secondary font-body">Line chart coming in Week 4</p>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@ import { Component } from '@angular/core';
           <div class="h-64 flex items-center justify-center border border-dashed border-border rounded-md">
             <div class="text-center">
               <img src="assets/logo-icon.svg" alt="" class="h-8 w-auto mx-auto mb-3 opacity-20">
-              <p class="text-sm text-ink-disabled font-body">Donut chart coming in Week 4</p>
+              <p class="text-sm text-ink-secondary font-body">Donut chart coming in Week 4</p>
             </div>
           </div>
         </div>

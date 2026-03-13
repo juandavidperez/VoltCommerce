@@ -19,7 +19,7 @@ import { AuthService } from '../../core/services/auth.service';
           <h1 class="font-heading text-4xl font-bold text-white mb-3">
             <span class="text-primary">Volt</span>Commerce
           </h1>
-          <p class="text-lg text-white/50 font-body max-w-sm mx-auto">
+          <p class="text-lg text-white/80 font-body max-w-sm mx-auto">
             Premium electronics marketplace. Fast shipping, trusted brands.
           </p>
         </div>
@@ -32,7 +32,7 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="lg:hidden flex items-center justify-center gap-2 mb-10">
             <img src="assets/logo-icon.svg" alt="" class="h-10 w-auto">
             <span class="font-heading font-bold text-2xl text-ink-primary">
-              <span class="text-primary">Volt</span>Commerce
+              <span class="text-primary-text">Volt</span>Commerce
             </span>
           </div>
 
@@ -69,7 +69,7 @@ import { AuthService } from '../../core/services/auth.service';
 
           <p class="text-center text-sm text-ink-secondary mt-8 font-body">
             Don't have an account?
-            <a routerLink="/auth/register" class="text-primary hover:text-primary-hover font-medium transition-colors">Create one</a>
+            <a routerLink="/auth/register" class="text-primary-text hover:text-ink-primary font-medium transition-colors">Create one</a>
           </p>
         </div>
       </div>
