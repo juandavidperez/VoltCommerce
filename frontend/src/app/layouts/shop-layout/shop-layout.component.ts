@@ -13,22 +13,19 @@ import { Observable, tap } from 'rxjs';
   template: `
     <div class="min-h-screen flex flex-col bg-surface-app">
       <!-- Header -->
-      <header class="bg-surface-card border-b border-border sticky top-0 z-50">
+      <header class="border-b border-border sticky top-0 z-50" style="background-color: rgb(37, 52, 70);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <a routerLink="/" class="flex items-center gap-2 group">
-              <img src="assets/logo-icon.svg" alt="" class="h-8 w-8 transition-transform duration-300 group-hover:rotate-12">
-              <span class="font-heading font-bold text-xl tracking-tight text-ink-primary">
-                Volt<span class="text-primary">Commerce</span>
-              </span>
+              <img src="assets/logo-full.svg" alt="VoltCommerce" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
             </a>
 
             <!-- Nav -->
             <div class="flex-1 flex justify-center ml-8 sm:ml-0">
               <nav class="hidden md:flex items-center gap-8">
                 <a routerLink="/products" routerLinkActive="text-primary font-semibold"
-                   class="text-sm text-ink-secondary hover:text-primary transition-colors duration-150 font-body uppercase tracking-wider">
+                   class="text-sm text-gray-300 hover:text-primary transition-colors duration-150 font-body uppercase tracking-wider">
                   Products
                 </a>
               </nav>
@@ -40,7 +37,7 @@ import { Observable, tap } from 'rxjs';
               <!-- Cart Trigger -->
               <button 
                  (click)="openCart()"
-                 class="relative p-2 rounded-full text-ink-secondary hover:text-primary hover:bg-primary-light transition-all duration-150 group">
+                 class="relative p-2 rounded-full text-gray-300 hover:text-primary hover:bg-white/10 transition-all duration-150 group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
@@ -52,29 +49,29 @@ import { Observable, tap } from 'rxjs';
                 }
               </button>
 
-              <div class="h-6 w-px bg-border hidden sm:block"></div>
+              <div class="h-6 w-px bg-gray-600 hidden sm:block"></div>
 
               <!-- User Menu -->
               @if (currentUser$ | async; as user) {
                 <div class="hidden sm:flex items-center gap-4">
                   <a routerLink="/orders"
-                     class="text-sm font-medium text-ink-secondary hover:text-primary transition-colors font-body cursor-pointer">Orders</a>
+                     class="text-sm font-medium text-gray-300 hover:text-primary transition-colors font-body cursor-pointer">Orders</a>
                   
                   @if (user.role === 'ADMIN') {
                      <a routerLink="/admin"
-                       class="text-sm font-bold text-primary hover:text-primary-hover bg-primary-light/50 px-3 py-1 rounded-full transition-colors font-body cursor-pointer">Admin</a>
+                       class="text-sm font-bold text-white hover:text-gray-100 bg-primary px-3 py-1 rounded-full transition-colors font-body cursor-pointer">Admin</a>
                   }
                   
                   <button (click)="logout()"
-                    class="text-sm font-medium text-ink-muted hover:text-danger transition-colors font-body cursor-pointer ml-2">Logout</button>
+                    class="text-sm font-medium text-gray-400 hover:text-danger transition-colors font-body cursor-pointer ml-2">Logout</button>
                 </div>
                 
               } @else {
                 <div class="hidden sm:flex items-center gap-3">
                   <a routerLink="/auth/login"
-                     class="text-sm font-medium text-ink-secondary hover:text-primary transition-colors font-body cursor-pointer">Log in</a>
+                     class="text-sm font-medium text-gray-300 hover:text-primary transition-colors font-body cursor-pointer">Log in</a>
                   <a routerLink="/auth/register"
-                     class="btn-primary text-sm !py-2 !px-4 shadow-sm">Sign up</a>
+                     class="btn-primary text-sm !py-2 !px-4 shadow-sm border-none">Sign up</a>
                 </div>
               }
             </div>
