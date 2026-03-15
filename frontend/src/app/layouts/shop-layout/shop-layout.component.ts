@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -117,21 +117,21 @@ export class ShopLayoutComponent implements OnInit {
 
   private authService = inject(AuthService);
   private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
 
   currentUser$ = this.authService.currentUser$;
   cartItemCount = 0;
 
   ngOnInit() {
-    // Only load cart if we have a user logged in (or relying on auth interceptor to not fail)
     this.currentUser$.subscribe(user => {
       if (user) {
         this.cartService.loadCart().subscribe();
       }
     });
 
-    // Subscribe to cart changes to update local count efficiently
     this.cartService.cart$.subscribe(() => {
       this.cartItemCount = this.cartService.getTotalItemsCount();
+      this.cdr.markForCheck();
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -155,8 +155,9 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
   @Output() closed = new EventEmitter<void>();
   
   private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
-  
+
   isOpen = false;
   cart: CartResponse | null = null;
   isUpdating = false;
@@ -167,6 +168,7 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
       .subscribe(cart => {
         this.cart = cart;
         this.isUpdating = false;
+        this.cdr.markForCheck();
       });
   }
 
@@ -194,7 +196,8 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
       .subscribe({
         error: (err: unknown) => {
           console.error('Failed to update quantity', err);
-          this.isUpdating = false; // Re-enable UI on error
+          this.isUpdating = false;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -206,7 +209,8 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
       .subscribe({
         error: (err: unknown) => {
           console.error('Failed to remove item', err);
-          this.isUpdating = false; // Re-enable UI on error
+          this.isUpdating = false;
+          this.cdr.markForCheck();
         }
       });
   }
