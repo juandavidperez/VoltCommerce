@@ -1,81 +1,218 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ProductService, ProductFilters } from '../../core/services/product.service';
+import { CategoryService } from '../../core/services/category.service';
+import { CartService } from '../../core/services/cart.service';
+import { Product } from '../../core/models/product.model';
+import { Category } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <!-- Page Header -->
-      <div class="mb-8 animate-fade-in-up">
-        <h1 class="font-heading text-3xl font-bold text-ink-primary mb-2">Products</h1>
-        <p class="text-sm text-ink-secondary font-body">Browse our collection of premium electronics</p>
-      </div>
-
-      <div class="flex gap-8">
-        <!-- Sidebar Filters (placeholder) -->
-        <aside class="hidden lg:block w-[260px] flex-shrink-0 animate-fade-in-up animate-stagger-1">
-          <div class="card sticky top-24">
-            <h3 class="font-heading text-sm font-semibold text-ink-primary mb-4 uppercase tracking-wider">Filters</h3>
-
-            <div class="mb-5">
-              <p class="form-label">Category</p>
-              <div class="space-y-2 mt-2">
-                @for (cat of categories; track cat) {
-                  <label class="flex items-center gap-2 cursor-pointer text-sm text-ink-secondary hover:text-ink-primary transition-colors font-body">
-                    <input type="checkbox" class="accent-primary w-4 h-4 rounded">
-                    {{ cat }}
-                  </label>
-                }
-              </div>
-            </div>
-
-            <div class="mb-5">
-              <p class="form-label">Price Range</p>
-              <div class="flex gap-2 mt-2">
-                <input type="number" placeholder="Min" class="form-input !py-2 !text-xs font-mono">
-                <input type="number" placeholder="Max" class="form-input !py-2 !text-xs font-mono">
-              </div>
-            </div>
-
-            <div>
-              <p class="form-label">Sort By</p>
-              <select class="form-input !py-2 mt-2 text-sm">
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest First</option>
-                <option>Name A-Z</option>
-              </select>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Product Grid (placeholder) -->
-        <div class="flex-1">
-          <!-- Search Bar -->
-          <div class="mb-6 animate-fade-in-up animate-stagger-2">
-            <div class="relative">
-              <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-disabled" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input type="text" placeholder="Search products..." class="form-input !pl-10">
-            </div>
-          </div>
-
-          <!-- Empty State -->
-          <div class="card animate-fade-in-up animate-stagger-3">
-            <div class="flex flex-col items-center justify-center py-20">
-              <img src="assets/logo-icon.svg" alt="" class="h-16 w-auto mb-6 opacity-15">
-              <h3 class="font-heading text-lg font-semibold text-ink-primary mb-2">Product catalog coming soon</h3>
-              <p class="text-sm text-ink-secondary font-body max-w-sm text-center">
-                The product grid with cards, images, prices, and "Add to Cart" buttons will be built in Week 2.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './product-list.component.html'
 })
-export class ProductListComponent {
-  categories = ['Laptops', 'Smartphones', 'Audio', 'Gaming', 'Accessories', 'Monitors'];
+export class ProductListComponent implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+  private cartService = inject(CartService);
+
+  private destroy$ = new Subject<void>();
+  private searchSubject = new Subject<string>();
+
+  // State
+  products: Product[] = [];
+  categories: Category[] = [];
+  loadingProducts = true;
+  loadingCategories = true;
+  addingToCartId: number | null = null;
+  
+  // Pagination State
+  totalPages = 0;
+  totalElements = 0;
+
+  // Filters State
+  filters: ProductFilters = {
+    page: 0,
+    size: 12,
+    sortBy: 'createdAt',
+    sortDir: 'desc'
+  };
+
+  ngOnInit() {
+    this.loadCategories();
+    this.loadProducts();
+
+    // Setup debounced search
+    this.searchSubject.pipe(
+      takeUntil(this.destroy$),
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.filters.search = searchTerm || undefined;
+      this.filters.page = 0; // Reset to page 0 on new search
+      this.loadProducts();
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadCategories() {
+    this.loadingCategories = true;
+    this.categoryService.getAllCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (categories) => {
+          this.categories = categories;
+          this.loadingCategories = false;
+        },
+        error: (err) => {
+          console.error('Failed to load categories', err);
+          this.loadingCategories = false;
+        }
+      });
+  }
+
+  loadProducts() {
+    this.loadingProducts = true;
+    
+    // Clean up empty strings from filters before sending to API
+    const cleanFilters = { ...this.filters };
+    if (!cleanFilters.search?.trim()) delete cleanFilters.search;
+    
+    this.productService.getProducts(cleanFilters)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (page) => {
+          this.products = page.content;
+          this.totalPages = page.totalPages;
+          this.totalElements = page.totalElements;
+          this.loadingProducts = false;
+          
+          // Scroll to top when page changes and we have results
+          if (typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+          this.loadingProducts = false;
+        }
+      });
+  }
+
+  // --- Filter Event Handlers ---
+
+  onCategoryChange(slug: string) {
+    if (this.filters.category === slug) {
+      this.filters.category = undefined; // Toggle off
+    } else {
+      this.filters.category = slug;
+    }
+    this.filters.page = 0;
+    this.loadProducts();
+  }
+
+  onSearchChange(term: string) {
+    this.searchSubject.next(term);
+  }
+
+  onFilterChange() {
+    // Handle manual max/min price inputs
+    this.filters.page = 0;
+    this.loadProducts();
+  }
+
+  onSortChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    const [sortBy, sortDir] = value.split(',');
+    
+    this.filters.sortBy = sortBy;
+    this.filters.sortDir = sortDir as 'asc' | 'desc';
+    this.filters.page = 0;
+    this.loadProducts();
+  }
+
+  onPageChange(pageIndex: number) {
+    if (pageIndex >= 0 && pageIndex < this.totalPages) {
+      this.filters.page = pageIndex;
+      this.loadProducts();
+    }
+  }
+
+  clearSearch() {
+    this.filters.search = undefined;
+    this.filters.page = 0;
+    this.loadProducts();
+  }
+
+  clearFilters() {
+    this.filters = {
+      page: 0,
+      size: 12,
+      sortBy: 'createdAt',
+      sortDir: 'desc'
+    };
+    this.loadProducts();
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(
+      this.filters.category || 
+      this.filters.search || 
+      this.filters.minPrice || 
+      this.filters.maxPrice
+    );
+  }
+
+  getPageNumbers(): number[] {
+    const pages = [];
+    const maxVisiblePages = 5;
+    const current = this.filters.page || 0;
+    
+    let start = Math.max(0, current - Math.floor(maxVisiblePages / 2));
+    let end = Math.min(this.totalPages - 1, start + maxVisiblePages - 1);
+    
+    // Adjust start if end hit the boundary
+    if (end - start + 1 < maxVisiblePages) {
+      start = Math.max(0, end - maxVisiblePages + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  // --- Cart Actions ---
+
+  addToCart(product: Product) {
+    if (product.stock <= 0) return;
+    
+    this.addingToCartId = product.id;
+    
+    this.cartService.addItem({ productId: product.id, quantity: 1 })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.addingToCartId = null;
+          // Here we would typically show a toast notification
+        },
+        error: (err) => {
+          console.error('Failed to add to cart', err);
+          this.addingToCartId = null;
+          // Determine if error is stock limit or generic error
+        }
+      });
+  }
+
+  onImageError(event: any) {
+    event.target.src = 'assets/placeholder-product.svg';
+  }
 }
