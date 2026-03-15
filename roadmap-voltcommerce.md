@@ -112,69 +112,69 @@ Esta semana construyes toda la experiencia del lado del cliente: navegar product
 
 ### Backend — Catálogo
 
-- [ ] Configurar integración con Supabase Storage:
+- [✅] Configurar integración con Supabase Storage:
   - Crear bucket `product-images` en Supabase con acceso público
   - Agregar cliente HTTP en Spring para subir archivos a Supabase Storage REST API
   - Crear `StorageService` con método `uploadImage(MultipartFile file): String` que retorna la URL pública
-- [ ] `CategoryController` + `CategoryService`:
+- [✅] `CategoryController` + `CategoryService`:
   - `GET /api/categories` — listar todas las categorías activas
   - `GET /api/categories/{slug}` — detalle de una categoría
   - Documentar con anotaciones `@Operation` y `@ApiResponse` de Swagger
-- [ ] `ProductController` + `ProductService`:
+- [✅] `ProductController` + `ProductService`:
   - `GET /api/products` — listar productos con filtros y paginación server-side:
     - Query params: `?category=electronica&minPrice=100&maxPrice=500&search=laptop&sortBy=price&sortDir=asc&page=0&size=12`
     - Usar Spring Data Specifications para combinar filtros dinámicamente
   - `GET /api/products/{slug}` — detalle de producto
   - Documentar endpoints con Swagger
-- [ ] Crear migración Flyway `V2__add_product_indexes.sql` con índices de búsqueda en `name` y `description` (full-text search básico con PostgreSQL `ILIKE`)
-- [ ] **Tests — ProductService:**
+- [✅] Crear migración Flyway `V2__add_product_indexes.sql` con índices de búsqueda en `name` y `description` (full-text search básico con PostgreSQL `ILIKE`)
+- [✅] **Tests — ProductService:**
   - Test de filtros: buscar por categoría retorna solo productos de esa categoría
   - Test de paginación: página 0 con size 12 retorna máximo 12 productos
   - Test de producto inactivo: no debe aparecer en listados públicos
 
 ### Backend — Carrito
 
-- [ ] `CartController` + `CartService`:
+- [✅] `CartController` + `CartService`:
   - `GET /api/cart` — obtener carrito del usuario autenticado (crea uno si no existe)
   - `POST /api/cart/items` — agregar producto al carrito (`{ productId, quantity }`)
   - `PUT /api/cart/items/{productId}` — actualizar cantidad de un item
   - `DELETE /api/cart/items/{productId}` — remover un item del carrito
   - `DELETE /api/cart` — vaciar carrito completo
-- [ ] Validación de stock al agregar al carrito: si `quantity > product.stock`, retornar error 400
-- [ ] Documentar endpoints del carrito con Swagger
-- [ ] **Tests — CartService:**
+- [✅] Validación de stock al agregar al carrito: si `quantity > product.stock`, retornar error 400
+- [✅] Documentar endpoints del carrito con Swagger
+- [✅] **Tests — CartService:**
   - Test de agregar producto que no existe (debe lanzar excepción)
   - Test de agregar más cantidad que el stock disponible
   - Test de que el carrito se crea automáticamente si no existe
 
 ### Frontend — Catálogo
 
-- [ ] `ProductService` y `CategoryService` con HttpClient
-- [ ] Página de catálogo (`/products`):
+- [✅] `ProductService` y `CategoryService` con HttpClient
+- [✅] Página de catálogo (`/products`):
   - Grid de productos con cards (imagen de Supabase, nombre, precio, badge de categoría)
   - Sidebar de filtros: por categoría (checkboxes), rango de precio (inputs), ordenar por
   - Paginación con botones Previous/Next o número de páginas
   - Barra de búsqueda con debounce de 300ms
   - Estado vacío si no hay resultados
   - Skeleton loaders mientras cargan los productos
-- [ ] Página de detalle de producto (`/products/:slug`):
+- [✅] Página de detalle de producto (`/products/:slug`):
   - Imagen grande, nombre, precio, descripción, stock disponible
   - Selector de cantidad (respeta stock máximo)
   - Botón "Add to Cart" (deshabilitado si stock = 0)
   - Breadcrumb: Home > Categoría > Nombre del producto
-- [ ] **Tests — ProductService:**
+- [✅] **Tests — ProductService:**
   - Test de que los query params se construyen correctamente al filtrar
 
 ### Frontend — Carrito
 
-- [ ] `CartService` con HttpClient + estado local del carrito en un BehaviorSubject
-- [ ] Ícono de carrito en el header con badge mostrando cantidad de items (reactivo via BehaviorSubject)
-- [ ] Sidebar/drawer del carrito (se abre desde el header):
+- [✅] `CartService` con HttpClient + estado local del carrito en un BehaviorSubject
+- [✅] Ícono de carrito en el header con badge mostrando cantidad de items (reactivo via BehaviorSubject)
+- [✅] Sidebar/drawer del carrito (se abre desde el header):
   - Lista de items con imagen, nombre, precio, cantidad, subtotal por item
   - Botones para aumentar/disminuir cantidad o eliminar item
   - Total del carrito al fondo
   - Botón "Checkout"
-- [ ] **Tests — CartService:**
+- [✅] **Tests — CartService:**
   - Test de que el badge del header se actualiza al agregar un item
 
 ### Entregable de la semana

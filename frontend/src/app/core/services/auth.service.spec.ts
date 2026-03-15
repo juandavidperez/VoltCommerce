@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
+import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
+
+@Component({ template: '', standalone: true })
+class DummyComponent {}
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -15,7 +19,7 @@ describe('AuthService', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideRouter([])
+        provideRouter([{ path: 'auth/login', component: DummyComponent }])
       ]
     });
 
@@ -33,7 +37,7 @@ describe('AuthService', () => {
   });
 
   it('should return false for isAuthenticated when no token exists', () => {
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should return true for isAuthenticated with valid non-expired token', () => {
@@ -44,7 +48,7 @@ describe('AuthService', () => {
 
     // Re-create service to pick up token
     service = TestBed.inject(AuthService);
-    expect(service.isAuthenticated()).toBeTrue();
+    expect(service.isAuthenticated()).toBe(true);
   });
 
   it('should return false for isAuthenticated with expired token', () => {
@@ -53,7 +57,7 @@ describe('AuthService', () => {
     localStorage.setItem('accessToken', fakeToken);
 
     service = TestBed.inject(AuthService);
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should clear localStorage on logout', () => {
