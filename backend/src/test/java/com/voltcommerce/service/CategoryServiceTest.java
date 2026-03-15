@@ -1,5 +1,6 @@
 package com.voltcommerce.service;
 
+import com.voltcommerce.dto.CategoryResponse;
 import com.voltcommerce.entity.Category;
 import com.voltcommerce.exception.ResourceNotFoundException;
 import com.voltcommerce.repository.CategoryRepository;
@@ -42,7 +43,7 @@ class CategoryServiceTest {
     void getAllCategories_ShouldReturnList() {
         when(categoryRepository.findAll()).thenReturn(List.of(testCategory));
 
-        List<Category> result = categoryService.getAllCategories();
+        List<CategoryResponse> result = categoryService.getAllCategories();
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -54,7 +55,7 @@ class CategoryServiceTest {
     void getCategoryBySlug_ShouldReturnCategory_WhenSlugExists() {
         when(categoryRepository.findBySlug("electronics")).thenReturn(Optional.of(testCategory));
 
-        Category result = categoryService.getCategoryBySlug("electronics");
+        CategoryResponse result = categoryService.getCategoryBySlug("electronics");
 
         assertNotNull(result);
         assertEquals("electronics", result.getSlug());

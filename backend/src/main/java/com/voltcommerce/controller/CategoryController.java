@@ -1,6 +1,6 @@
 package com.voltcommerce.controller;
 
-import com.voltcommerce.entity.Category;
+import com.voltcommerce.dto.CategoryResponse;
 import com.voltcommerce.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +25,7 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Get all categories")
     @ApiResponse(responseCode = "200", description = "List of all categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
@@ -33,7 +33,7 @@ public class CategoryController {
     @Operation(summary = "Get a category by its slug")
     @ApiResponse(responseCode = "200", description = "Category details")
     @ApiResponse(responseCode = "404", description = "Category not found")
-    public ResponseEntity<Category> getCategoryBySlug(@PathVariable String slug) {
+    public ResponseEntity<CategoryResponse> getCategoryBySlug(@PathVariable String slug) {
         return ResponseEntity.ok(categoryService.getCategoryBySlug(slug));
     }
 }
