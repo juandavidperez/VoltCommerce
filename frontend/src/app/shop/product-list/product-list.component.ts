@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ProductService, ProductFilters } from '../../core/services/product.service';
 import { CategoryService } from '../../core/services/category.service';
 import { CartService } from '../../core/services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Product } from '../../core/models/product.model';
 import { Category } from '../../core/models/category.model';
 
@@ -19,6 +20,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
@@ -29,7 +33,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   loadingProducts = true;
   loadingCategories = true;
   addingToCartId: number | null = null;
-  
+
   // Pagination State
   totalPages = 0;
   totalElements = 0;
@@ -71,10 +75,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
         next: (categories) => {
           this.categories = categories;
           this.loadingCategories = false;
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('Failed to load categories', err);
           this.loadingCategories = false;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -94,7 +100,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.totalPages = page.totalPages;
           this.totalElements = page.totalElements;
           this.loadingProducts = false;
-          
+          this.cdr.markForCheck();
+
           // Scroll to top when page changes and we have results
           if (typeof window !== 'undefined') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -103,6 +110,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.error('Failed to load products', err);
           this.loadingProducts = false;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -194,7 +202,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   addToCart(product: Product) {
     if (product.stock <= 0) return;
-    
+
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
     this.addingToCartId = product.id;
     
     this.cartService.addItem({ productId: product.id, quantity: 1 })
@@ -202,12 +215,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.addingToCartId = null;
-          // Here we would typically show a toast notification
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('Failed to add to cart', err);
           this.addingToCartId = null;
-          // Determine if error is stock limit or generic error
+          this.cdr.markForCheck();
         }
       });
   }

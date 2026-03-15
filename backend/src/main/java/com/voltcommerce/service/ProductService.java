@@ -1,5 +1,6 @@
 package com.voltcommerce.service;
 
+import com.voltcommerce.dto.ProductResponse;
 import com.voltcommerce.entity.Product;
 import com.voltcommerce.exception.ResourceNotFoundException;
 import com.voltcommerce.repository.ProductRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -20,7 +22,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public Page<Product> getProducts(
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProducts(
             String category,
             BigDecimal minPrice,
             BigDecimal maxPrice,
@@ -37,17 +40,18 @@ public class ProductService {
                 category, minPrice, maxPrice, search
         );
 
-        return productRepository.findAll(spec, pageable);
+        return productRepository.findAll(spec, pageable).map(ProductResponse::fromEntity);
     }
 
-    public Product getProductBySlug(String slug) {
+    @Transactional(readOnly = true)
+    public ProductResponse getProductBySlug(String slug) {
         Product product = productRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with slug: " + slug));
-                
+
         if (!product.getActive()) {
             throw new ResourceNotFoundException("Product is not active");
         }
-        
-        return product;
+
+        return ProductResponse.fromEntity(product);
     }
 }

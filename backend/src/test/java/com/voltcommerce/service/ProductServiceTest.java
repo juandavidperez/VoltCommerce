@@ -1,5 +1,6 @@
 package com.voltcommerce.service;
 
+import com.voltcommerce.dto.ProductResponse;
 import com.voltcommerce.entity.Category;
 import com.voltcommerce.entity.Product;
 import com.voltcommerce.exception.ResourceNotFoundException;
@@ -61,7 +62,7 @@ class ProductServiceTest {
         when(productRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(pagedResponse);
 
-        Page<Product> result = productService.getProducts(
+        Page<ProductResponse> result = productService.getProducts(
                 "electronics", null, null, null, "createdAt", "desc", 0, 12
         );
 
@@ -75,7 +76,7 @@ class ProductServiceTest {
     void getProductBySlug_ShouldReturnProduct_WhenActiveAndFound() {
         when(productRepository.findBySlug("laptop-gaming")).thenReturn(Optional.of(testProduct));
 
-        Product result = productService.getProductBySlug("laptop-gaming");
+        ProductResponse result = productService.getProductBySlug("laptop-gaming");
 
         assertNotNull(result);
         assertEquals("Laptop Gaming", result.getName());

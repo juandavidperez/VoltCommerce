@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil, finalize } from 'rxjs';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Product } from '../../core/models/product.model';
 
 @Component({
@@ -18,6 +19,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
   product: Product | null = null;
@@ -57,10 +60,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (product) => {
           this.product = product;
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('Failed to load product details', err);
           this.error = true;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -90,6 +95,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   addToCart() {
     if (!this.product || this.product.stock <= 0 || this.quantity > this.product.stock) return;
+
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
     
     this.isAddingToCart = true;
     
@@ -103,12 +113,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: () => {
-        // Reset quantity visually after adding successfully
         this.quantity = 1;
+        this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Failed to add multiple items to cart', err);
-        // We'll rely on the global interceptor/error handler or future toast service
+        console.error('Failed to add to cart', err);
+        this.cdr.markForCheck();
       }
     });
   }

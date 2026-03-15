@@ -1,6 +1,6 @@
 package com.voltcommerce.controller;
 
-import com.voltcommerce.entity.Product;
+import com.voltcommerce.dto.ProductResponse;
 import com.voltcommerce.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "Get all active products with filters and pagination")
     @ApiResponse(responseCode = "200", description = "Page of products")
-    public ResponseEntity<Page<Product>> getProducts(
+    public ResponseEntity<Page<ProductResponse>> getProducts(
             @Parameter(description = "Category slug") @RequestParam(required = false) String category,
             @Parameter(description = "Minimum price") @RequestParam(required = false) BigDecimal minPrice,
             @Parameter(description = "Maximum price") @RequestParam(required = false) BigDecimal maxPrice,
@@ -43,7 +43,7 @@ public class ProductController {
     @Operation(summary = "Get a single active product by its slug")
     @ApiResponse(responseCode = "200", description = "Product details")
     @ApiResponse(responseCode = "404", description = "Product not found or inactive")
-    public ResponseEntity<Product> getProductBySlug(@PathVariable String slug) {
+    public ResponseEntity<ProductResponse> getProductBySlug(@PathVariable String slug) {
         return ResponseEntity.ok(productService.getProductBySlug(slug));
     }
 }
