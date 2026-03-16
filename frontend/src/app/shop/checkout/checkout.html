@@ -1,0 +1,195 @@
+<div class="bg-surface-app min-h-[calc(100vh-theme(spacing.16))] py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="mb-10 text-center sm:text-left">
+      <h1 class="font-heading text-3xl font-bold text-ink-primary">Checkout</h1>
+      <p class="text-sm text-ink-secondary font-body mt-2">Complete your VoltCommerce order securely.</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-10">
+      
+      <!-- Left Column: Forms -->
+      <div class="lg:w-2/3">
+        <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+          
+          <!-- Section 1: Shipping Info -->
+          <div class="card p-6">
+            <h2 class="font-heading text-lg font-semibold text-ink-primary mb-6 flex items-center gap-2">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs">1</span>
+              Shipping Information
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="form-label">First Name</label>
+                <input type="text" formControlName="firstName" class="form-input" placeholder="John">
+                @if (f['firstName'].touched && f['firstName'].invalid) {
+                  <p class="text-danger text-xs mt-1 font-body">First name is required</p>
+                }
+              </div>
+              
+              <div>
+                <label class="form-label">Last Name</label>
+                <input type="text" formControlName="lastName" class="form-input" placeholder="Doe">
+                @if (f['lastName'].touched && f['lastName'].invalid) {
+                  <p class="text-danger text-xs mt-1 font-body">Last name is required</p>
+                }
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="form-label">Address</label>
+                <input type="text" formControlName="address" class="form-input" placeholder="123 Silicon Ave, Suite 400">
+                @if (f['address'].touched && f['address'].invalid) {
+                  <p class="text-danger text-xs mt-1 font-body">Address is required</p>
+                }
+              </div>
+
+              <div>
+                <label class="form-label">City</label>
+                <input type="text" formControlName="city" class="form-input" placeholder="San Francisco">
+                @if (f['city'].touched && f['city'].invalid) {
+                  <p class="text-danger text-xs mt-1 font-body">City is required</p>
+                }
+              </div>
+
+              <div class="grid grid-cols-2 gap-5">
+                <div>
+                  <label class="form-label">Country</label>
+                  <input type="text" formControlName="country" class="form-input" placeholder="USA">
+                  @if (f['country'].touched && f['country'].invalid) {
+                    <p class="text-danger text-xs mt-1 font-body">Req.</p>
+                  }
+                </div>
+                <div>
+                  <label class="form-label">Zip Code</label>
+                  <input type="text" formControlName="zipCode" class="form-input" placeholder="94107">
+                  @if (f['zipCode'].touched && f['zipCode'].invalid) {
+                    <p class="text-danger text-xs mt-1 font-body">Req.</p>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Payment Details (Stripe) -->
+          <div class="card p-6">
+            <h2 class="font-heading text-lg font-semibold text-ink-primary mb-6 flex items-center gap-2">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs">2</span>
+              Payment Method
+            </h2>
+            
+            <div class="bg-surface-app border border-border rounded-lg p-5">
+              <label class="form-label mb-3">Credit or Debit Card</label>
+              
+              <!-- Stripe Elements Mount Point -->
+              <div #cardElement class="mb-2"></div>
+              
+              <!-- Stripe Errors -->
+              @if (cardError) {
+                <div class="text-danger text-sm mt-2 flex items-start gap-2 animate-fade-in-up">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ cardError }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="mt-4 flex items-center gap-2 text-xs text-ink-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+              Payments are securely encrypted and processed by Stripe.
+            </div>
+          </div>
+
+          <!-- Server Errors -->
+          @if (serverError) {
+            <div class="bg-danger/10 border-l-4 border-danger p-4 rounded-r-md animate-fade-in-up">
+              <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-danger shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <p class="text-danger text-sm font-medium">{{ serverError }}</p>
+              </div>
+            </div>
+          }
+
+          <!-- Submit Action -->
+          <div class="flex justify-end pt-4">
+            <button type="submit" [disabled]="checkoutForm.invalid || isProcessing || !stripe || !cardElement"
+                    class="btn-primary w-full sm:w-auto px-8 py-3 flex justify-center items-center gap-2 text-base shadow-lg shadow-primary/20 
+                           disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
+              @if (isProcessing) {
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              } @else {
+                Pay & Place Order
+              }
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <div class="lg:w-1/3">
+        <div class="card p-6 sticky top-24">
+          <h2 class="font-heading text-lg font-semibold text-ink-primary mb-5">Order Summary</h2>
+          
+          @if (cart$ | async; as cart) {
+            <div class="divide-y divide-border/50 max-h-[40vh] overflow-y-auto custom-scrollbar">
+              @for (item of cart.items; track item.productId) {
+                <div class="py-4 flex gap-4">
+                  <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-border bg-white">
+                    <img [src]="item.imageUrl || 'assets/placeholder-product.svg'" 
+                         [alt]="item.name" 
+                         class="h-full w-full object-contain object-center">
+                  </div>
+                  <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="text-sm font-medium text-ink-primary line-clamp-2">{{ item.name }}</h3>
+                    <p class="mt-1 text-xs text-ink-secondary flex items-center gap-1">
+                      Qty: <span>{{ item.quantity }}</span>
+                      <span class="text-[10px]">&times;</span> 
+                      <span>{{ item.price | currency }}</span>
+                    </p>
+                  </div>
+                  <div class="text-sm font-semibold text-ink-primary flex items-center whitespace-nowrap">
+                    {{ (item.price * item.quantity) | currency }}
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-border space-y-3">
+              <div class="flex justify-between text-sm text-ink-secondary">
+                <span>Subtotal</span>
+                <span>{{ cart.total | currency }}</span>
+              </div>
+              <div class="flex justify-between text-sm text-ink-secondary">
+                <span>Shipping</span>
+                <span>Free (Promo)</span>
+              </div>
+              <div class="flex justify-between items-center text-lg font-bold text-ink-primary pt-3 border-t border-border">
+                <span>Total</span>
+                <span class="text-primary">{{ cart.total | currency }}</span>
+              </div>
+            </div>
+          } @else {
+            <div class="py-10 text-center">
+              <svg class="mx-auto h-12 w-12 text-ink-disabled animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path>
+              </svg>
+              <p class="mt-4 text-sm text-ink-secondary">Loading your cart...</p>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
