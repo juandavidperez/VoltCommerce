@@ -1,6 +1,5 @@
 package com.voltcommerce.service;
 
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -16,14 +15,12 @@ import com.voltcommerce.repository.OrderRepository;
 import com.voltcommerce.repository.ProductRepository;
 import com.voltcommerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
@@ -35,14 +32,6 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-
-    @Value("${stripe.secret.key}")
-    private String stripeSecretKey;
-
-    @PostConstruct
-    public void init() {
-        Stripe.apiKey = stripeSecretKey;
-    }
 
     @Transactional
     public CheckoutResponse checkout(CheckoutRequest request) {
@@ -126,6 +115,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderResponse> getUserOrders(Pageable pageable) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
@@ -135,6 +125,7 @@ public class OrderService {
                 .map(this::mapToOrderResponse);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderDetails(Long orderId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
