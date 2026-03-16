@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ import { AuthService } from '../../core/services/auth.service';
       -webkit-transition: box-shadow 150ms ease;
       transition: box-shadow 150ms ease;
     }
-    
+
     .StripeElement--focus {
       box-shadow: 0 1px 3px 0 #cfd7df;
       outline: 2px solid transparent;
@@ -50,10 +50,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
   private orderService = inject(OrderService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
   public authService = inject(AuthService);
 
   private destroy$ = new Subject<void>();
-  
+
   checkoutForm!: FormGroup;
   stripe: Stripe | null = null;
   elements: StripeElements | null = null;
@@ -99,7 +100,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.stripe = await this.orderService.getStripe();
     if (this.stripe) {
       this.elements = this.stripe.elements();
-      
+
       this.cardElement = this.elements.create('card', {
         style: {
           base: {
@@ -117,7 +118,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           }
         }
       });
-      
+
       this.cardElement.mount(this.cardElementRef.nativeElement);
 
       this.cardElement.on('change', (event) => {
@@ -126,8 +127,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         } else {
           this.cardError = null;
         }
+        this.cdr.markForCheck();
       });
     }
+    this.cdr.markForCheck();
   }
 
   async onSubmit() {
@@ -150,6 +153,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         catchError(err => {
           this.serverError = err.error?.message || 'An error occurred while creating your order.';
           this.isProcessing = false;
+          this.cdr.markForCheck();
           throw err;
         })
       )
@@ -167,16 +171,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           if (result.error) {
             this.serverError = result.error.message || 'Payment failed';
             this.isProcessing = false;
+            this.cdr.markForCheck();
           } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
             // Reload cart logic from the server to wipe UI
             this.cartService.loadCart().subscribe();
-            
-            // Re-route to success view
-            this.router.navigate(['/checkout/success']);
+
+            // Re-route to success view with orderId
+            this.router.navigate(['/checkout/success'], {
+              state: { orderId: response.orderId }
+            });
           }
         } catch (e: any) {
           this.serverError = e.message || 'An unexpected error occurred';
           this.isProcessing = false;
+          this.cdr.markForCheck();
         }
       });
   }
