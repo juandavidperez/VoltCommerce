@@ -5,6 +5,10 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { CheckoutComponent } from './shop/checkout/checkout';
+import { CheckoutSuccessComponent } from './shop/checkout-success/checkout-success';
+import { OrderListComponent } from './shop/order-list/order-list';
+import { OrderDetailComponent } from './shop/order-detail/order-detail';
 
 export const routes: Routes = [
   {
@@ -16,11 +20,10 @@ export const routes: Routes = [
         path: 'products',
         loadChildren: () => import('./shop/shop.routes').then(m => m.shopRoutes)
       },
-      {
-        path: 'orders',
-        canActivate: [authGuard],
-        loadChildren: () => import('./shop/shop.routes').then(m => m.shopRoutes)
-      }
+      { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+      { path: 'checkout/success', component: CheckoutSuccessComponent, canActivate: [authGuard] },
+      { path: 'orders', component: OrderListComponent, canActivate: [authGuard] },
+      { path: 'orders/:id', component: OrderDetailComponent, canActivate: [authGuard] }
     ]
   },
   {

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../core/services/cart.service';
 import { CartResponse } from '../../core/models/cart.model';
@@ -156,6 +156,7 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
   
   private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
   private destroy$ = new Subject<void>();
 
   isOpen = false;
@@ -217,7 +218,6 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
 
   checkout() {
     this.close();
-    // Intentionally left with alerts as Stripe is Week 3
-    alert('Checkout flow will be implemented in Week 3 (Stripe Integration)');
+    this.router.navigate(['/checkout']);
   }
 }
