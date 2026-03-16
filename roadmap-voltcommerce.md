@@ -188,10 +188,10 @@ Esta semana integras el pago real con Stripe y construyes el flujo de órdenes c
 
 ### Backend — Checkout y Stripe
 
-- [ ] Configurar Stripe en Spring Boot:
+- [✅] Configurar Stripe en Spring Boot:
   - `StripeConfig`: inicializar `Stripe.apiKey` con la variable de entorno
   - Agregar dependencia `stripe-java` si no está ya en `pom.xml`
-- [ ] `OrderController` + `OrderService`:
+- [✅] `OrderController` + `OrderService`:
   - `POST /api/orders/checkout` — crear una orden a partir del carrito actual:
     1. Validar que todos los productos siguen teniendo stock suficiente
     2. Crear registro de `Order` con status `PENDING`
@@ -202,38 +202,38 @@ Esta semana integras el pago real con Stripe y construyes el flujo de órdenes c
     7. Vaciar el carrito
   - `GET /api/orders` — listar órdenes del usuario autenticado (con paginación)
   - `GET /api/orders/{id}` — detalle de una orden
-- [ ] `POST /api/webhooks/stripe` — endpoint para recibir eventos de Stripe:
+- [✅] `POST /api/webhooks/stripe` — endpoint para recibir eventos de Stripe:
   - Verificar firma del webhook con `STRIPE_WEBHOOK_SECRET`
   - Evento `payment_intent.succeeded` → cambiar orden a `PAID`
   - Evento `payment_intent.payment_failed` → cambiar orden a `CANCELLED` y restaurar stock
-- [ ] Crear migración Flyway `V3__add_order_indexes.sql`: índice en `orders.user_id` y `orders.status`
-- [ ] Documentar endpoints de órdenes con Swagger
-- [ ] **Tests — OrderService:**
+- [✅] Crear migración Flyway `V3__add_order_indexes.sql`: índice en `orders.user_id` y `orders.status`
+- [✅] Documentar endpoints de órdenes con Swagger
+- [✅] **Tests — OrderService:**
   - Test de checkout con stock insuficiente (debe lanzar excepción y no crear la orden)
   - Test de que `unitPrice` en `OrderItem` es el precio del momento, no el actual
   - Test de webhook: evento `payment_intent.succeeded` cambia status a `PAID`
 
 ### Frontend — Checkout
 
-- [ ] Instalar Stripe.js: `npm install @stripe/stripe-js`
-- [ ] Página de checkout (`/checkout`):
+- [✅] Instalar Stripe.js: `npm install @stripe/stripe-js`
+- [✅] Página de checkout (`/checkout`):
   - Resumen del pedido (items, subtotal, total)
   - Formulario de dirección de envío (nombre, dirección, ciudad, país, código postal)
   - Formulario de pago con Stripe Elements (`CardElement`) — manejo nativo de Stripe para datos de tarjeta
   - Al confirmar: llamar a `/api/orders/checkout`, recibir `client_secret`, confirmar pago con `stripe.confirmCardPayment()`
   - Redireccionar a página de éxito o mostrar error
-- [ ] Página de éxito (`/checkout/success`):
+- [✅] Página de éxito (`/checkout/success`):
   - Mensaje de confirmación con número de orden
   - Resumen del pedido
   - Botón "Continue Shopping"
-- [ ] Página "Mis Órdenes" (`/orders`):
+- [✅] Página "Mis Órdenes" (`/orders`):
   - Lista de órdenes del usuario con: número, fecha, total, status (badge de color)
   - Click en una orden abre el detalle
-- [ ] Página de detalle de orden (`/orders/:id`):
+- [✅] Página de detalle de orden (`/orders/:id`):
   - Items comprados, precios, subtotal, total
   - Status actual con timeline visual (PENDING → PAID → SHIPPED → DELIVERED)
   - Dirección de envío
-- [ ] **Tests — CheckoutComponent:**
+- [✅] **Tests — CheckoutComponent:**
   - Test de que no se puede acceder a `/checkout` sin items en el carrito
 
 ### Entregable de la semana
