@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-checkout-success',
@@ -18,4 +18,12 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class CheckoutSuccessComponent {}
+export class CheckoutSuccessComponent {
+  private router = inject(Router);
+  orderId: number | null = null;
+
+  constructor() {
+    const nav = this.router.getCurrentNavigation();
+    this.orderId = nav?.extras?.state?.['orderId'] ?? null;
+  }
+}
