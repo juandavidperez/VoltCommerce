@@ -5,3 +5,5 @@ export interface Category {
   description: string;
   imageUrl: string;
 }
+
+export type CategoryResponse = Category;

@@ -42,3 +42,5 @@ export interface Page<T> {
   numberOfElements: number;
   empty: boolean;
 }
+
+export type ProductResponse = Product;
