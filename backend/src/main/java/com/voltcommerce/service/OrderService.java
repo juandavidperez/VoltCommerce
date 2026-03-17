@@ -137,6 +137,38 @@ public class OrderService {
         return mapToOrderResponse(order);
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+                .map(this::mapToOrderResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderResponse> getAllOrdersFiltered(OrderStatus status, java.time.LocalDate from, java.time.LocalDate to, Pageable pageable) {
+        org.springframework.data.jpa.domain.Specification<Order> spec = org.springframework.data.jpa.domain.Specification.where(null);
+
+        if (status != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
+        }
+        if (from != null) {
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), from.atStartOfDay()));
+        }
+        if (to != null) {
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), to.atTime(23, 59, 59)));
+        }
+
+        return orderRepository.findAll(spec, pageable).map(this::mapToOrderResponse);
+    }
+
+    @Transactional
+    public OrderResponse updateOrderStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+
+        order.setStatus(status);
+        return mapToOrderResponse(orderRepository.save(order));
+    }
+
     private OrderResponse mapToOrderResponse(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
