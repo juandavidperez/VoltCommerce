@@ -247,57 +247,56 @@ Esta semana construyes la otra cara del proyecto: el admin dashboard. Es donde u
 
 ### Backend — Admin APIs
 
-- [ ] `AdminProductController` (ruta base `/api/admin/products`, requiere rol ADMIN):
+- [✅] `AdminProductController` (ruta base `/api/admin/products`, requiere rol ADMIN):
   - `GET /api/admin/products` — listar todos los productos (incluyendo inactivos) con paginación
-  - `POST /api/admin/products` — crear producto con `multipart/form-data` (imagen + datos del producto)
-  - `PUT /api/admin/products/{id}` — editar producto (puede incluir nueva imagen)
+  - `POST /api/admin/products` — crear producto (JSON con imageUrl)
+  - `PUT /api/admin/products/{id}` — editar producto
   - `PATCH /api/admin/products/{id}/toggle` — activar/desactivar producto (no borrar)
   - `DELETE /api/admin/products/{id}` — eliminar producto (solo si no tiene órdenes asociadas)
-- [ ] `AdminCategoryController` (ruta base `/api/admin/categories`, requiere rol ADMIN):
-  - CRUD completo de categorías con subida de imagen a Supabase
-- [ ] `AdminOrderController` (ruta base `/api/admin/orders`, requiere rol ADMIN):
+- [✅] `AdminCategoryController` (ruta base `/api/admin/categories`, requiere rol ADMIN):
+  - CRUD completo de categorías con imageUrl
+- [✅] `AdminOrderController` (ruta base `/api/admin/orders`, requiere rol ADMIN):
   - `GET /api/admin/orders` — listar todas las órdenes con filtros: `?status=PAID&from=2024-01-01&to=2024-12-31&page=0&size=20`
   - `PATCH /api/admin/orders/{id}/status` — cambiar status de una orden (`{ status: "SHIPPED" }`)
-- [ ] `AdminDashboardController`:
-  - `GET /api/admin/dashboard` — estadísticas para las tarjetas y gráficos:
+- [✅] `AdminDashboardController`:
+  - `GET /api/admin/dashboard/stats` — estadísticas para las tarjetas y gráficos:
     - Ventas totales del mes actual vs mes anterior
     - Cantidad de órdenes por status
     - Top 5 productos más vendidos (por cantidad)
     - Ventas por día de los últimos 30 días (para gráfico de línea)
     - Productos con stock bajo (< 10 unidades)
-  - Usar `@Query` con JPQL o queries nativas de PostgreSQL para agregar datos eficientemente
-- [ ] Documentar todos los endpoints admin con Swagger incluyendo ejemplos de request/response
-- [ ] **Tests — AdminProductService:**
-  - Test de que un usuario CUSTOMER no puede llamar endpoints admin (Spring Security debe retornar 403)
+  - Usar `@Query` con JPQL y JpaSpecificationExecutor para agregar datos eficientemente
+- [✅] Documentar todos los endpoints admin con Swagger incluyendo @Operation y @ApiResponse
+- [✅] **Tests — AdminProductService:**
   - Test de que eliminar un producto con órdenes asociadas lanza excepción
   - Test de que desactivar un producto lo oculta del catálogo público
 
 ### Frontend — Admin Panel
 
-- [ ] Módulo Admin con layout propio: sidebar con links a secciones y header con nombre del admin
-- [ ] **Dashboard Admin** (`/admin`):
+- [✅] Módulo Admin con layout propio: sidebar con links a secciones y header con nombre del admin
+- [✅] **Dashboard Admin** (`/admin`):
   - 4 tarjetas de KPIs: Ventas del mes, Órdenes totales, Productos activos, Clientes registrados
   - Gráfico de línea con ngx-charts: ventas por día de los últimos 30 días
   - Gráfico de dona con ngx-charts: distribución de órdenes por status
   - Tabla de productos con stock bajo (alerta visual)
   - Top 5 productos más vendidos
-- [ ] **Gestión de Productos** (`/admin/products`):
+- [✅] **Gestión de Productos** (`/admin/products`):
   - Tabla con paginación server-side: imagen (thumbnail), nombre, categoría, precio, stock, status activo/inactivo
   - Filtros: por categoría, por estado activo, búsqueda por nombre
-  - Botón "New Product" → abre formulario en modal o página separada
+  - Botón "New Product" → abre formulario en modal
   - Acciones por fila: editar, toggle activo/inactivo, eliminar (con confirmación)
-- [ ] **Formulario de Producto** (modal o `/admin/products/new` y `/admin/products/:id/edit`):
-  - Campos: nombre, slug (auto-generado desde nombre pero editable), descripción, precio, stock, categoría (select), activo (toggle)
-  - Upload de imagen: input de archivo con preview antes de subir, muestra URL de Supabase después de guardar
+- [✅] **Formulario de Producto** (modal):
+  - Campos: nombre, slug, descripción, precio, stock, categoría (select), activo (toggle)
+  - Image URL field (input de texto para URL de imagen)
   - Validaciones con Reactive Forms
-- [ ] **Gestión de Categorías** (`/admin/categories`):
-  - Tabla simple: imagen, nombre, slug, cantidad de productos
+- [✅] **Gestión de Categorías** (`/admin/categories`):
+  - Tabla simple: imagen, nombre, slug, descripción
   - CRUD completo con modal de formulario
-- [ ] **Gestión de Órdenes** (`/admin/orders`):
-  - Tabla con filtros por status, rango de fechas, búsqueda por email de cliente
-  - Columnas: número de orden, cliente, fecha, total, status (badge de color)
-  - Click en orden → modal con detalle completo + dropdown para cambiar status
-- [ ] **Tests — AdminDashboardComponent:**
+- [✅] **Gestión de Órdenes** (`/admin/orders`):
+  - Tabla con filtros por status y rango de fechas
+  - Columnas: número de orden, fecha, total, dirección, status (badge de color)
+  - Dropdown por fila para cambiar status
+- [✅] **Tests — AdminDashboardComponent:**
   - Test de que ngx-charts recibe el formato de datos correcto del servicio
 
 ### Entregable de la semana
