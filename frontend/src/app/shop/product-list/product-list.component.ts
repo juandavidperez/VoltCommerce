@@ -78,7 +78,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Failed to load categories', err);
           this.loadingCategories = false;
           this.cdr.markForCheck();
         }
@@ -108,7 +107,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          console.error('Failed to load products', err);
           this.loadingProducts = false;
           this.cdr.markForCheck();
         }
@@ -218,7 +216,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Failed to add to cart', err);
           this.addingToCartId = null;
           this.cdr.markForCheck();
         }

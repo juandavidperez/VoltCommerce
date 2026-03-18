@@ -196,7 +196,6 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         error: (err: unknown) => {
-          console.error('Failed to update quantity', err);
           this.isUpdating = false;
           this.cdr.markForCheck();
         }
@@ -209,7 +208,6 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         error: (err: unknown) => {
-          console.error('Failed to remove item', err);
           this.isUpdating = false;
           this.cdr.markForCheck();
         }

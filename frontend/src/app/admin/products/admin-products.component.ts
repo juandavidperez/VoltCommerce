@@ -409,7 +409,6 @@ export class AdminProductsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Failed to toggle product:', err);
       }
     });
   }

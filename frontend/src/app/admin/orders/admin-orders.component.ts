@@ -208,7 +208,6 @@ export class AdminOrdersComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Failed to update order status:', err);
         alert('Failed to update status. Please try again.');
         this.loadOrders();
       }

@@ -63,7 +63,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Failed to load product details', err);
           this.error = true;
           this.cdr.markForCheck();
         }
@@ -117,7 +116,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Failed to add to cart', err);
         this.cdr.markForCheck();
       }
     });
