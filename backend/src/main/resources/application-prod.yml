@@ -13,7 +13,6 @@ spring:
   flyway:
     schemas: voltcommerce
     default-schema: voltcommerce
-    create-schemas: true
 
 logging:
   level:

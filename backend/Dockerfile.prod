@@ -10,15 +10,15 @@ COPY src ./src
 RUN mvn clean package -DskipTests -B
 
 # Stage 2: Run
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN groupadd -r spring && useradd -r -g spring spring
 USER spring:spring
 
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-Dspring.devtools.restart.enabled=false", "-jar", "app.jar", "--spring.profiles.active=prod"]
