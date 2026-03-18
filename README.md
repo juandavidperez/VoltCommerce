@@ -2,10 +2,10 @@
 
 > Full-stack e-commerce app for electronics. REST API with Spring Boot, Angular storefront, Stripe payments, admin dashboard with ngx-charts, Dockerized with Flyway migrations.
 
-[![CI](https://github.com/juandavidperez/voltcommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/juandavidperez/voltcommerce/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/juandavidperez/VoltCommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/juandavidperez/VoltCommerce/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/Java_17-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=flat&logo=springboot&logoColor=white)
-![Angular](https://img.shields.io/badge/Angular_19-DD0031?style=flat&logo=angular&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular_21-DD0031?style=flat&logo=angular&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_15-316192?style=flat&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 
@@ -13,8 +13,8 @@
 
 ## Live Demo
 
-🌐 **Storefront:** `https://voltcommerce.vercel.app` *(coming soon)*
-⚙️ **API Docs (Swagger):** `https://voltcommerce-api.railway.app/swagger-ui.html` *(coming soon)*
+🌐 **Storefront:** `https://voltcommerce.netlify.app` *(coming soon)*
+⚙️ **API Docs (Swagger):** `https://voltcommerce-api.onrender.com/swagger-ui.html` *(coming soon)*
 
 **Demo credentials:**
 
@@ -74,13 +74,13 @@
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Angular 19 · TypeScript · Tailwind CSS · ngx-charts · Stripe.js |
+| Frontend | Angular 21 · TypeScript · Tailwind CSS · ngx-charts · Stripe.js |
 | Backend | Java 17 · Spring Boot 3 · Spring Security · Spring Data JPA |
 | Database | PostgreSQL 15 · Flyway (migrations) · Hibernate |
 | Payments | Stripe (PaymentIntents + Webhooks) |
 | Storage | Supabase Storage (product images) |
 | DevOps | Docker · Docker Compose · GitHub Actions |
-| Testing | JUnit 5 · Mockito · Jasmine · Karma |
+| Testing | JUnit 5 · Mockito · Vitest |
 | Docs | Swagger UI / springdoc-openapi |
 
 ---
@@ -90,13 +90,13 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                        Client                           │
-│              Angular SPA (Vercel)                       │
+│              Angular SPA (Netlify)                      │
 │   ShopModule · AdminModule · AuthModule · CoreModule    │
 └────────────────────────┬────────────────────────────────┘
                          │ HTTPS / REST
 ┌────────────────────────▼────────────────────────────────┐
 │                   Spring Boot API                       │
-│                  (Railway / Docker)                     │
+│                  (Render / Docker)                      │
 │  AuthController · ProductController · CartController   │
 │  OrderController · AdminController · WebhookController │
 │         Spring Security (JWT) · Swagger UI             │
@@ -104,7 +104,7 @@
        │                 │                  │
 ┌──────▼──────┐  ┌───────▼──────┐  ┌───────▼──────┐
 │ PostgreSQL  │  │   Supabase   │  │    Stripe    │
-│  (Railway)  │  │   Storage    │  │  Payments +  │
+│ (Supabase)  │  │   Storage    │  │  Payments +  │
 │   Flyway    │  │   (Images)   │  │   Webhooks   │
 └─────────────┘  └──────────────┘  └──────────────┘
 ```
@@ -171,14 +171,12 @@ voltcommerce/
 │   │   │   └── shared/            # Reusable components
 │   │   └── environments/
 │   ├── Dockerfile
-│   ├── Dockerfile.prod
-│   └── nginx.conf
+│   └── netlify.toml
 │
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
 ├── docker-compose.yml
-├── docker-compose.prod.yml
 ├── .env.example
 └── README.md
 ```
@@ -311,19 +309,28 @@ Key endpoint groups:
 
 The production setup uses multi-stage Docker builds to minimize image size.
 
-**Backend → Railway**
+**Backend → Render**
 ```bash
-# Railway detects Dockerfile.prod automatically
-# Set all environment variables in Railway dashboard
+# Create a Web Service in Render pointing to this repo
+# Set Dockerfile path to backend/Dockerfile.prod
+# Set all environment variables: DATABASE_URL, JWT_SECRET, STRIPE_*, SUPABASE_*, CORS_ALLOWED_ORIGINS
 ```
 
-**Frontend → Vercel**
+**Frontend → Netlify**
 ```bash
-# Connect the GitHub repo in Vercel dashboard
-# Set VITE_API_URL to your Railway backend URL
+# Connect the GitHub repo in Netlify dashboard
+# Base directory: frontend
+# Build command and publish directory are configured in frontend/netlify.toml
 ```
 
-**CI/CD** — GitHub Actions runs the full test suite on every push and PR, and deploys to production automatically when tests pass on `main`.
+**CI/CD** — GitHub Actions runs the full test suite on every push and PR. On push to `main` with tests passing, it deploys backend via Render Deploy Hook and frontend via Netlify CLI.
+
+**Required GitHub Secrets:**
+| Secret | Description |
+|--------|-------------|
+| `RENDER_DEPLOY_HOOK_URL` | Render deploy hook URL (Settings → Deploy Hook) |
+| `NETLIFY_SITE_ID` | Netlify site ID (Site settings → General) |
+| `NETLIFY_AUTH_TOKEN` | Netlify personal access token (User settings → Applications) |
 
 ---
 

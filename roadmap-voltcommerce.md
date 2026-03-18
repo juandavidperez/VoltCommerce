@@ -310,40 +310,41 @@ La semana final es para dejar todo production-ready, con CI/CD funcionando y doc
 
 ### Backend — Preparar para producción
 
-- [ ] Crear `application-dev.yml` y `application-prod.yml` con perfiles separados
-- [ ] Crear `backend/Dockerfile.prod` (multi-stage: build con Maven → run con JRE slim)
-- [ ] Verificar que Flyway corre las migraciones también en el entorno de producción (Railway/Render crean la DB vacía, Flyway crea las tablas)
-- [ ] Verificar configuración de Stripe Webhook para la URL de producción
-- [ ] Revisar y limpiar logs: no loggear tokens, passwords, ni el Stripe secret
-- [ ] Confirmar que `/actuator/health` responde correctamente
+- [✅] Crear `application-dev.yml` y `application-prod.yml` con perfiles separados
+- [✅] Crear `backend/Dockerfile.prod` (multi-stage: build con Maven → run con JRE slim)
+- [✅] Verificar que Flyway corre las migraciones también en el entorno de producción (Render crea la DB vacía, Flyway crea las tablas)
+- [✅] Verificar configuración de Stripe Webhook para la URL de producción
+- [✅] Revisar y limpiar logs: no loggear tokens, passwords, ni el Stripe secret
+- [✅] Confirmar que `/actuator/health` responde correctamente
 
 ### Frontend — Build y optimización
 
-- [ ] Crear `frontend/Dockerfile.prod` (multi-stage: build con Node → servir con Nginx)
-- [ ] Crear `nginx.conf` para SPA routing
-- [ ] Verificar que `environment.prod.ts` apunta a la URL de producción del backend y tiene la clave pública de Stripe
-- [ ] Confirmar que todos los módulos tienen lazy loading configurado
+- [✅] Configurar build de producción para deploy estático en Netlify
+- [✅] Crear `frontend/netlify.toml` con configuración de build y redirects para SPA routing
+- [✅] Verificar que `environment.prod.ts` apunta a la URL de producción del backend en Render y tiene la clave pública de Stripe
+- [✅] Confirmar que todos los módulos tienen lazy loading configurado
 
 ### CI/CD — GitHub Actions completo
 
-- [ ] Actualizar `.github/workflows/ci.yml` para el pipeline completo:
-  - **Build & Test** (en cada push y PR): checkout → tests backend con Maven → tests frontend con Karma
+- [✅] Actualizar `.github/workflows/ci.yml` para el pipeline completo:
+  - **Build & Test** (en cada push y PR): checkout → tests backend con Maven → tests frontend con Vitest
   - **Deploy** (solo en push a `main` con tests pasando):
-    - Deploy backend a Railway usando Railway CLI o GitHub integration
-    - Deploy frontend a Vercel usando Vercel CLI
-- [ ] Agregar badges de CI al README: `[![CI](https://github.com/...)]`
+    - Deploy backend a Render (auto-deploy desde GitHub o Render Deploy Hook)
+    - Deploy frontend a Netlify (auto-deploy desde GitHub o Netlify CLI)
+- [✅] Agregar badges de CI al README: `[![CI](https://github.com/...)]`
 
 ### Deploy
 
-- [ ] Backend: deploy a Railway
-  - Usar `Dockerfile.prod`
-  - Crear servicio PostgreSQL en Railway (Flyway crea las tablas automáticamente al iniciar)
-  - Setear todas las variables de entorno: DB, JWT, Stripe, Supabase
-  - Configurar Stripe Webhook apuntando a la URL de Railway
+- [ ] Backend: deploy a Render
+  - Usar `Dockerfile.prod` como Web Service en Render
+  - Usar PostgreSQL del proyecto Supabase "trackr" con schema `voltcommerce` (Flyway crea el schema y tablas automáticamente al iniciar)
+  - Setear todas las variables de entorno: DATABASE_URL (Supabase pooler), JWT, Stripe, Supabase, CORS_ALLOWED_ORIGINS
+  - Configurar Stripe Webhook apuntando a la URL de Render
   - Verificar `/actuator/health` y `/swagger-ui.html` en producción
-- [ ] Frontend: deploy a Vercel
-  - Conectar repo de GitHub, configurar variables de entorno
-  - Verificar SPA routing y que las llamadas a la API de Railway funcionan
+- [ ] Frontend: deploy a Netlify
+  - Conectar repo de GitHub, configurar build command (`npm run build`) y publish directory (`dist/voltcommerce/browser`)
+  - Configurar redirects para SPA routing (`/* → /index.html 200`)
+  - Verificar que las llamadas a la API de Render funcionan (configurar `_redirects` o `netlify.toml` para proxy si es necesario)
 - [ ] Probar flujo completo en producción con una tarjeta de prueba de Stripe (`4242 4242 4242 4242`)
 
 ### Documentación
@@ -351,7 +352,7 @@ La semana final es para dejar todo production-ready, con CI/CD funcionando y doc
 - [ ] README.md completo en inglés:
   - Descripción del proyecto + screenshot del catálogo + screenshot del dashboard admin
   - Stack tecnológico
-  - Diagrama de arquitectura: Browser → Angular (Vercel) → Spring Boot (Railway) → PostgreSQL + Supabase Storage + Stripe
+  - Diagrama de arquitectura: Browser → Angular (Netlify) → Spring Boot (Render) → PostgreSQL + Supabase Storage + Stripe
   - Link al demo en vivo + credenciales de demo (un usuario customer y un admin de prueba)
   - Instrucciones para correr localmente: prerequisites, `cp .env.example .env`, `docker compose up`
   - Instrucciones para probar pagos: tarjetas de prueba de Stripe
