@@ -19,6 +19,10 @@ app:
     expiration: 900000
     refresh-expiration: 604800000
 
+app:
+  cors:
+    allowed-origins: http://localhost:4200
+
 stripe:
   api-key: sk_test_placeholder
   webhook-secret: whsec_placeholder
