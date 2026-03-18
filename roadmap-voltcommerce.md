@@ -335,13 +335,13 @@ La semana final es para dejar todo production-ready, con CI/CD funcionando y doc
 
 ### Deploy
 
-- [ ] Backend: deploy a Render
+- [✅] Backend: deploy a Render
   - Usar `Dockerfile.prod` como Web Service en Render
   - Usar PostgreSQL del proyecto Supabase "trackr" con schema `voltcommerce` (Flyway crea el schema y tablas automáticamente al iniciar)
   - Setear todas las variables de entorno: DATABASE_URL (Supabase pooler), JWT, Stripe, Supabase, CORS_ALLOWED_ORIGINS
   - Configurar Stripe Webhook apuntando a la URL de Render
   - Verificar `/actuator/health` y `/swagger-ui.html` en producción
-- [ ] Frontend: deploy a Netlify
+- [✅] Frontend: deploy a Netlify
   - Conectar repo de GitHub, configurar build command (`npm run build`) y publish directory (`dist/voltcommerce/browser`)
   - Configurar redirects para SPA routing (`/* → /index.html 200`)
   - Verificar que las llamadas a la API de Render funcionan (configurar `_redirects` o `netlify.toml` para proxy si es necesario)
@@ -349,7 +349,7 @@ La semana final es para dejar todo production-ready, con CI/CD funcionando y doc
 
 ### Documentación
 
-- [ ] README.md completo en inglés:
+- [✅] README.md completo en inglés:
   - Descripción del proyecto + screenshot del catálogo + screenshot del dashboard admin
   - Stack tecnológico
   - Diagrama de arquitectura: Browser → Angular (Netlify) → Spring Boot (Render) → PostgreSQL + Supabase Storage + Stripe
@@ -357,8 +357,8 @@ La semana final es para dejar todo production-ready, con CI/CD funcionando y doc
   - Instrucciones para correr localmente: prerequisites, `cp .env.example .env`, `docker compose up`
   - Instrucciones para probar pagos: tarjetas de prueba de Stripe
   - Decisiones técnicas: por qué Flyway, por qué guardar `unitPrice` en `OrderItem`, cómo funciona el webhook de Stripe
-- [ ] Limpiar código: eliminar console.logs, comentarios TODO, código muerto
-- [ ] Crear usuario ADMIN de demo con datos de prueba vía Flyway (`V4__seed_demo_data.sql`)
+- [✅] Limpiar código: eliminar console.logs, comentarios TODO, código muerto
+- [✅] Crear usuario ADMIN de demo con datos de prueba vía Flyway (`V4__seed_demo_data.sql`)
 
 ### Entregable de la semana
 > App deployada con URL pública, CI/CD verde en GitHub, Swagger documentado, README profesional con screenshots. Lista para poner en el CV.
