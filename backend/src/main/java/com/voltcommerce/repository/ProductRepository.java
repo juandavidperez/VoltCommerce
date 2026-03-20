@@ -19,6 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findByStockLessThanAndActiveTrue(int threshold);
 
     @Query("SELECT oi.product, SUM(oi.quantity) as totalSold FROM OrderItem oi " +
-           "GROUP BY oi.product ORDER BY totalSold DESC")
+           "GROUP BY oi.product ORDER BY totalSold DESC LIMIT 5")
     List<Object[]> findTopSellingProducts();
 }

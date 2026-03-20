@@ -66,7 +66,6 @@ public class AdminDashboardService {
         // 7. Top 5 Products by sales
         List<Object[]> topProductsData = productRepository.findTopSellingProducts();
         List<DashboardStatsResponse.ProductSummary> topProducts = topProductsData.stream()
-                .limit(5)
                 .map(row -> {
                     Product p = (Product) row[0];
                     Long totalSold = (Long) row[1];
