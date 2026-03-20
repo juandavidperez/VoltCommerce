@@ -27,6 +27,7 @@ public class StorageService {
     private String supabaseKey;
 
     private final String BUCKET_NAME = "product-images";
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public String uploadImage(MultipartFile file) {
         if (file.isEmpty()) {
@@ -43,8 +44,6 @@ public class StorageService {
             
             // Supabase Storage REST API endpoint for uploading
             String uploadUrl = supabaseUrl + "/storage/v1/object/" + BUCKET_NAME + "/" + filename;
-
-            RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(supabaseKey);
